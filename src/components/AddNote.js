@@ -21,9 +21,10 @@ const AddNote = () => {
 
     return (
         <div>
+            <form>
             <h2 className="my-3 ">Add a note</h2>
-            <div class="row">
-                <div class="col col-4">
+            <div className="row">
+                <div className="col col-4">
                     <div className="mb-3">
                         <label htmlFor="title" className="form-label">
                             Title
@@ -38,7 +39,7 @@ const AddNote = () => {
                         />
                     </div>
                 </div>
-                <div class="col col-8">
+                <div className="col col-8">
                     <div className="mb-3">
                         <label htmlFor="description" className="form-label ">
                             Description
@@ -52,17 +53,17 @@ const AddNote = () => {
                             rows="3"
                         />
                     </div>
-                    
+
                 </div>
                 <button
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={handleClick}
-                    >
-                        Add Note
-                    </button>
+                    type="submit"
+                    className="btn btn-primary"
+                    onClick={handleClick}
+                >
+                    Add Note
+                </button>
             </div>
-            <form></form>
+            </form>
         </div>
     );
 };
