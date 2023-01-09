@@ -69,30 +69,32 @@ const NoteState = (props) => {
   };
 
 
-  //Edit a note
-  // const editNote = async (id, title, description, tag) => {
-  //   //API call
+  // Edit a note
+  const editNote = async ({id,title,description,tag}) => {
+    console.log(id)
+    const data={
+      "title":title,
+      "description":description,
+      "tag":tag
+    }
+    //API call
 
-  //   const response = await fetch(url, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //          body: JSON.stringify(data)
-  //   });
-  //   return response.json();
-
-  //   //Logic to edit in client
-  //   for (let index = 0; index < notes.length; index++) {
-  //     const element = notes[index];
-  //     if (element._id === id) element.title = title;
-  //     element.description = description;
-  //     element.tag = tag;
-  //   }
-  // };
+    const response = await fetch(`${HOST}/api/notes/updatenote/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        "auth-token":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNiNjcwNTE0MGQzYmE2M2Q4MGNjYjMwIn0sImlhdCI6MTY3MjkwMTc3Nn0.QSKxRGQ4OtH8hUL74s0V2SzBUFcOHL9_QnLt4UhP4gc",
+    },
+           body: JSON.stringify(data)
+    });
+    const final = await response.json();
+    console.log(final)
+    fetchNotes()
+  };
 
   return (
-    <NoteContext.Provider value={{ notes, addNote, deleteNote, fetchNotes }}>
+    <NoteContext.Provider value={{ notes, addNote, deleteNote, editNote,fetchNotes }}>
       {props.children}
     </NoteContext.Provider>
   );
