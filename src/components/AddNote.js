@@ -1,8 +1,10 @@
 import React from "react";
 import NoteContext from "../context/notes/NoteContext";
 import { useContext, useState } from "react";
+import AlertContext from "../context/alert/AlertContext";
 
 const AddNote = () => {
+    const {showAlert}=useContext(AlertContext)
     const context = useContext(NoteContext);
     const { addNote, fetchNotes } = context;
     const initialNote = { title: "", description: "", tag: "" };
@@ -14,7 +16,7 @@ const AddNote = () => {
         addNote(note.title, note.description, note.tag);
         fetchNotes();
         setNote({title: "", description: "", tag: "" })
-        // setnote(initialNote+"a")
+       showAlert("success","Added")
     };
     const onChange = (e) => {
         setNote({ ...note, [e.target.name]: e.target.value });
@@ -62,7 +64,7 @@ const AddNote = () => {
                 </div>
                 <button
                         type="submit"
-                        className="btn btn-dark flex-end"
+                        className="btn btn-primary flex-end"
                         onClick={handleClick}
                         disabled={note.title.length<5 || note.description.length<5}
                     >

@@ -3,8 +3,12 @@ import { useContext, useState, useEffect, useRef } from "react";
 import NoteContext from "../context/notes/NoteContext";
 import AddNote from "./AddNote";
 import NotesItem from "./NotesItem";
+import AlertContext from "../context/alert/AlertContext";
+import { useNavigate } from "react-router-dom";
 
 const Notes = () => {
+  const navigate=useNavigate();
+  const {showAlert}=useContext(AlertContext)
   const context = useContext(NoteContext);
   const { notes, fetchNotes, editNote } = context;
 
@@ -15,7 +19,12 @@ const Notes = () => {
     tag: "",
   });
   useEffect(() => {
-    fetchNotes();
+    if(localStorage.getItem("token")){
+      fetchNotes();
+    }
+    else{
+      navigate("/login")
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const updateNote = (currentNote) => {
@@ -35,6 +44,7 @@ const Notes = () => {
       description: note.edescription,
       tag: note.tag,
     });
+    showAlert("success","Saved")
   };
 
   const onChange = (e) => {

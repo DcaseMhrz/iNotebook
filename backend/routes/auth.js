@@ -4,7 +4,7 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const fetchuser=require("../middleware/fetchuser")
+const fetchuser = require("../middleware/fetchuser")
 
 const JWT_SECRET = "thisisajsontokensignature";
 
@@ -17,9 +17,11 @@ router.post(
     body("email", "Invalid Email").isEmail(),
   ],
   async (req, res) => {
+    let success = false
     // if there are error return badrequest and the error
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      success = false
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -27,6 +29,7 @@ router.post(
       //check whether the user with the email already exists
       let user = await User.findOne({ email: req.body.email });
       if (user) {
+        success = false
         return res.status(400).json({ error: "Sorry, user already exists" });
       }
       //hasing the password
@@ -39,7 +42,7 @@ router.post(
         email: req.body.email,
         password: secPass,
       });
-
+      
       console.log(req.body);
 
       //user successfuly created
@@ -48,8 +51,9 @@ router.post(
           id: user.id,
         },
       };
+      success = true
       const authToken = jwt.sign(data, JWT_SECRET);
-      res.json({ authToken });
+      res.json({success, authToken });
     } catch (error) {
       console.log(error.message);
       //log in the logger
@@ -68,22 +72,27 @@ router.post(
     body("password", "Password cannot be blank").exists(),
   ],
   async (req, res) => {
+    let success = false
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      success = false
       return res.status(400).json({ errors: errors.array() });
     }
 
     const { email, password } = req.body;
 
     try {
+      success = false
       let user = await User.findOne({ email });
 
       if (!user) {
+        success = false
         return res.status(400).json({ errors: "Invalid Login" });
       }
 
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
+        success = false
         return res.status(400).json({ errors: "Invalid Login" });
       }
       const data = {
@@ -92,7 +101,8 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, JWT_SECRET);
-      res.json({ authToken });
+      success = true
+      res.json({ success, authToken });
     } catch (error) {
       console.log(error.message);
       //log in the logger
@@ -107,15 +117,15 @@ router.post(
 
 router.post("/getuser", fetchuser, async (req, res) => {
   try {
-    const userId=req.user.id;
-    const user =await User.findById(userId).select("-password")
+    const userId = req.user.id;
+    const user = await User.findById(userId).select("-password")
     res.send(user)
   } catch (error) {
     console.log(error.message);
-      //log in the logger
+    //log in the logger
 
-      //error in the code
-      res.status(500).send("Internal Server Error");
+    //error in the code
+    res.status(500).send("Internal Server Error");
   }
 });
 
