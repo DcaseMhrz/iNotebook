@@ -59,7 +59,7 @@ const Notes = () => {
         <h2 className="my-3 text-center">Your Notes</h2>
         <div className="row justify-content-center">
           {notes.length===0 && 'No notes to display'}
-          {notes.length===0 && notes.map((note) => {
+          {notes.length!==0 && notes.map((note) => {
             return (
               <NotesItem note={note} key={note._id} updateNote={updateNote} />
             );
