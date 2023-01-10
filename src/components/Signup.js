@@ -34,7 +34,7 @@ const Signup = () => {
     const data = await response.json()
     console.log(data)
     if (data.success) {
-      localStorage.setItem("token", data.authtoken)
+      localStorage.setItem("token", data.authToken)
       navigate("/");
       showAlert("success", "Welcome to iNoteBook")
     }
